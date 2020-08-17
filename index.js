@@ -309,6 +309,16 @@ export class ByronAddress extends Ptr {
     const ret = await HaskellShelley.byronAddressFromAddress(addrPtr);
     return Ptr._wrap(ret, ByronAddress);
   }
+  /**
+  * @param {Bip32PublicKey} key
+  * @param {number} network
+  * @returns {Promise<ByronAddress | undefined>}
+  */
+  static async from_icarus_key(key, network) {
+    const keyPtr = Ptr._assertClass(key, Bip32PublicKey);
+    const ret = await HaskellShelley.byronAddressFromIcarusKey(keyPtr, network);
+    return Ptr._wrap(ret, ByronAddress);
+  }
 }
 
 export class Address extends Ptr {
@@ -476,6 +486,10 @@ export class BaseAddress extends Ptr {
     const ret = await HaskellShelley.baseAddressFromAddress(addrPtr);
     return Ptr._wrap(ret, BaseAddress);
   }
+  async to_address() {
+    const ret = await HaskellShelley.baseAddressToAddress(this.ptr);
+    return Ptr._wrap(ret, Address);
+  }
 }
 
 export class UnitInterval extends Ptr {
@@ -636,11 +650,11 @@ export class Vkeywitnesses extends Ptr {
     }
 
     /**
-    * @param {Vkwitness} item
+    * @param {Vkeywitness} item
     * @returns {Promise<void>}
     */
     async add(item) {
-      const itemPtr = Ptr._assertClass(item, Vkwitness);
+      const itemPtr = Ptr._assertClass(item, Vkeywitness);
       return HaskellShelley.vkeywitnessesAdd(this.ptr, itemPtr);
     }
 }
@@ -924,4 +938,48 @@ export class TransactionBuilder extends Ptr {
     const ret = await HaskellShelley.transactionBuilderEstimateFee(this.ptr);
     return Ptr._wrap(ret, Coin);
   }
+}
+
+export class PublicKey extends Ptr {
+   /**
+    * @returns {Promise<Ed25519KeyHash>}
+    */
+  async hash() {
+    const ret = await HaskellShelley.publicKeyHash(this.ptr);
+    return Ptr._wrap(ret, Ed25519KeyHash);
+  }
+}
+
+export class Bip32PublicKey extends Ptr {
+  /**
+    * @returns {Promise<PrivateKey>}
+    */
+   async to_raw_key() {
+    const ret = await HaskellShelley.bip32PublicKeyToRawKey(this.ptr);
+    return Ptr._wrap(ret, PublicKey);
+  }
+}
+
+/**
+* @param {TransactionHash} txBodyHash
+* @param {ByronAddress} addr
+* @param {Bip32PrivateKey} key
+* @returns {Promise<BootstrapWitness>}
+*/
+export const make_daedalus_bootstrap_witness = async (txBodyHash, addr, key) => {
+  const txBodyHashPtr = Ptr._assertClass(txBodyHash, TransactionHash);
+  const addrPtr = Ptr._assertClass(addr, ByronAddress);
+  const keyPtr = Ptr._assertClass(key, LegacyDaedalusPrivateKey);
+  const ret = await HaskellShelley.makeDaedalusBootstrapWitness(txBodyHashPtr, addrPtr, keyPtr);
+  return Ptr._wrap(ret, BootstrapWitness);
+}
+export class LegacyDaedalusPrivateKey extends Ptr {
+  /**
+    * @param {Uint8Array} bytes
+    * @returns {Promise<LegacyDaedalusPrivateKey>}
+    */
+   static async from_bytes(bytes) {
+    const ret = await HaskellShelley.legacyDaedalusPrivateKeyFromBytes(b64FromUint8Array(bytes));
+    return Ptr._wrap(ret, LegacyDaedalusPrivateKey);
+    }
 }

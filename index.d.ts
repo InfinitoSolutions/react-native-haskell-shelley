@@ -184,6 +184,14 @@ export class ByronAddress extends Ptr {
   * @returns {Promise<ByronAddress | undefined>}
   */
   static from_address(addr): Promise<ByronAddress | undefined>
+
+  /**
+  * @param {Bip32PublicKey} key
+  * @param {number} network
+  * @returns {Promise<ByronAddress | undefined>}
+  */
+ static from_icarus_key(key, network): Promise<ByronAddress | undefined>
+  
 }
 
 export class Address extends Ptr {
@@ -291,6 +299,10 @@ export class BaseAddress extends Ptr {
   * @returns {Promise<BaseAddress | undefined>}
   */
   static from_address(addr): Promise<BaseAddress | undefined>
+  /**
+  * @returns {Promise<Address>}
+  */
+  static to_address(): Promise<Address>
 }
 
 export class UnitInterval extends Ptr {
@@ -392,10 +404,10 @@ export class Vkeywitnesses extends Ptr {
     len(): Promise<number>
 
     /**
-    * @param {Vkwitness} item
+    * @param {Vkeywitness} item
     * @returns {Promise<void>}
     */
-    add(item: Vkwitness): Promise<void>
+    add(item: Vkeywitness): Promise<void>
 }
 
 // TODO
@@ -469,6 +481,10 @@ export class Transaction extends Ptr {
     witnessSet: TransactionWitnessSet,
     metadata?: TransactionMetadata,
   ): Promise<Transaction>
+  /**
+    * @returns {Promise<Uint8Array>}
+    */
+  to_bytes(): Promise<Uint8Array>;
 }
 
 export class TransactionBuilder extends Ptr {
@@ -566,3 +582,33 @@ export class TransactionBuilder extends Ptr {
   */
   estimate_fee(): Promise<Coin>
 }
+
+
+
+export class Bip32PublicKey extends Ptr {
+  /**
+  * @returns {Promise<PublicKey>}
+  */
+  to_raw_key(): Promise<PublicKey>;
+}
+export class PublicKey extends Ptr {
+  /**
+  * @returns {Promise<Ed25519KeyHash>}
+  */
+  hash(): Promise<Ed25519KeyHash>;
+}
+export class LegacyDaedalusPrivateKey extends Ptr {
+    /**
+      * @param {Uint8Array} bytes
+      * @returns {Promise<Bip32PrivateKey>}
+      */
+    static from_bytes(bytes: Uint8Array): Promise<Bip32PrivateKey>;
+
+}
+
+
+export const make_daedalus_bootstrap_witness: (
+  txBodyHash: TransactionHash,
+  addr: ByronAddress,
+  key: LegacyDaedalusPrivateKey,
+) => Promise<BootstrapWitness>

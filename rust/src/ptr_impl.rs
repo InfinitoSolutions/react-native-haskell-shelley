@@ -29,3 +29,6 @@ impl RPtrRepresentable for TransactionHash {}
 impl RPtrRepresentable for UnitInterval {}
 impl RPtrRepresentable for Vkeywitness {}
 impl RPtrRepresentable for Vkeywitnesses {}
+impl RPtrRepresentable for PublicKey {}
+impl RPtrRepresentable for LegacyDaedalusPrivateKey {}
+
