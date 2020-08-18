@@ -60,3 +60,17 @@ pub unsafe extern "C" fn base_address_from_address(
     .map(|base_address| base_address.rptr())
     .response(result, error)
 }
+
+#[no_mangle]
+pub unsafe extern "C" fn base_address_to_address(
+  rptr: RPtr, result: &mut RPtr, error: &mut CharPtr
+) -> bool {
+  handle_exception_result(|| {
+    rptr
+      .typed_ref::<BaseAddress>()
+      .map(|base_addr| base_addr.to_address())
+    })
+    .map(|addr| addr.rptr())
+    .response(result, error)
+}
+

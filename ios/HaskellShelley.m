@@ -18,8 +18,11 @@ RCT_EXPORT_METHOD(makeIcarusBootstrapWitness:(nonnull NSString *)txBodyHashPtr w
         RPtr addr = [[params objectAtIndex:1] rPtr];
         RPtr key = [[params objectAtIndex:2] rPtr];
         RPtr result;
-        utils_make_icarus_bootstrap_witness(txBodyHash, addr, key, &result, error);
-        return nil;
+       
+        return utils_make_icarus_bootstrap_witness(txBodyHash, addr, key, &result, error)
+        ? [NSString stringFromPtr:result]
+        : nil;
+        
     }] exec:@[txBodyHashPtr, addrPtr, keyPtr] andResolve:resolve orReject:reject];
 }
 
@@ -29,8 +32,11 @@ RCT_EXPORT_METHOD(makeVkeyWitness:(nonnull NSString *)txBodyHashPtr withSk:(nonn
         RPtr txBodyHash = [[params objectAtIndex:0] rPtr];
         RPtr sk = [[params objectAtIndex:1] rPtr];
         RPtr result;
-        utils_make_vkey_witness(txBodyHash, sk, &result, error);
-        return nil;
+        
+        
+        return utils_make_vkey_witness(txBodyHash, sk, &result, error)
+                   ? [NSString stringFromPtr:result]
+                   : nil;
     }] exec:@[txBodyHashPtr, skPtr] andResolve:resolve orReject:reject];
 }
 
@@ -39,8 +45,9 @@ RCT_EXPORT_METHOD(hashTransaction:(nonnull NSString *)txBodyPtr withResolve:(RCT
     [[CSafeOperation new:^NSString*(NSArray* params, CharPtr* error) {
         RPtr txBody = [txBodyPtr rPtr];
         RPtr result;
-        utils_hash_transaction(txBody, &result, error);
-        return nil;
+        return utils_hash_transaction(txBody, &result, error)
+            ? [NSString stringFromPtr:result]
+            : nil;
     }] exec:txBodyPtr andResolve:resolve orReject:reject];
 }
 
@@ -947,6 +954,76 @@ RCT_EXPORT_METHOD(ptrFree:(NSString *)ptr withResolve:(RCTPromiseResolveBlock)re
     RPtr rPtr = [ptr rPtr];
     rptr_free(&rPtr);
     resolve(nil);
+}
+
+
+RCT_EXPORT_METHOD(bip32PublicKeyToRawKey:(nonnull NSString *)bip32PrivateKeyPtr withResolve:(RCTPromiseResolveBlock)resolve andReject:(RCTPromiseRejectBlock)reject)
+{
+    [[CSafeOperation new:^NSString*(NSString* bip32PrivateKeyPtr, CharPtr* error) {
+        RPtr result;
+        RPtr bip32PrivateKey = [bip32PrivateKeyPtr rPtr];
+        return bip_32_public_key_to_raw_key(bip32PrivateKey, &result, error)
+            ? [NSString stringFromPtr:result]
+            : nil;
+    }] exec:bip32PrivateKeyPtr andResolve:resolve orReject:reject];
+}
+RCT_EXPORT_METHOD(publicKeyHash:(nonnull NSString *)ptr  withResolve:(RCTPromiseResolveBlock)resolve andReject:(RCTPromiseRejectBlock)reject)
+{
+    [[CSafeOperation new:^NSString*(NSString* ptr, CharPtr* error) {
+        RPtr result;
+        RPtr publicKey = [ptr rPtr];
+        return public_key_hash(publicKey, &result, error)
+            ? [NSString stringFromPtr:result]
+            : nil;
+    }] exec:ptr andResolve:resolve orReject:reject];
+}
+RCT_EXPORT_METHOD(baseAddressToAddress:(nonnull NSString *)ptr  withResolve:(RCTPromiseResolveBlock)resolve andReject:(RCTPromiseRejectBlock)reject)
+{
+    [[CSafeOperation new:^NSString*(NSString* ptr, CharPtr* error) {
+        RPtr result;
+        RPtr baseAddr = [ptr rPtr];
+        return base_address_to_address(baseAddr, &result, error)
+            ? [NSString stringFromPtr:result]
+            : nil;
+    }] exec:ptr andResolve:resolve orReject:reject];
+}
+
+RCT_EXPORT_METHOD(byronAddressFromIcarusKey:(nonnull NSString *)ptr withPaymentNetwork:(nonnull NSNumber *)network withResolve:(RCTPromiseResolveBlock)resolve andReject:(RCTPromiseRejectBlock)reject)
+{
+    [[CSafeOperation new:^NSString*(NSArray* params, CharPtr* error) {
+        RPtr result;
+        uintptr_t network = [[params objectAtIndex:1] unsignedIntegerValue];
+        RPtr key = [[params objectAtIndex:0] rPtr];
+        return byron_address_from_icarus_key(key, network, &result, error)
+            ? [NSString stringFromPtr:result]
+            : nil;
+    }] exec:@[ptr, network] andResolve:resolve orReject:reject];
+}
+
+RCT_EXPORT_METHOD(makeDaedalusBootstrapWitness:(nonnull NSString *)txBodyHashPtr withAddr:(nonnull NSString *)addrPtr andKey:(nonnull NSString *)keyPtr withResolve:(RCTPromiseResolveBlock)resolve andReject:(RCTPromiseRejectBlock)reject)
+{
+    [[CSafeOperation new:^NSString*(NSArray* params, CharPtr* error) {
+        RPtr txBodyHash = [[params objectAtIndex:0] rPtr];
+        RPtr addr = [[params objectAtIndex:1] rPtr];
+        RPtr key = [[params objectAtIndex:2] rPtr];
+        RPtr result;
+       
+        return utils_make_daedalus_bootstrap_witness(txBodyHash, addr, key, &result, error)
+        ? [NSString stringFromPtr:result]
+        : nil;
+        
+    }] exec:@[txBodyHashPtr, addrPtr, keyPtr] andResolve:resolve orReject:reject];
+}
+
+RCT_EXPORT_METHOD(legacyDaedalusPrivateKeyFromBytes:(nonnull NSString *)bytesStr  withResolve:(RCTPromiseResolveBlock)resolve andReject:(RCTPromiseRejectBlock)reject)
+{
+    [[CSafeOperation new:^NSString*(NSString* bytesStr, CharPtr* error) {
+        RPtr result;
+        NSData* data = [NSData fromBase64:bytesStr];
+        return legacy_daedalus_private_key_from_bytes((uint8_t*)data.bytes, data.length, &result, error)
+            ? [NSString stringFromPtr:result]
+            : nil;
+    }] exec:bytesStr andResolve:resolve orReject:reject];
 }
 
 + (void)initialize
