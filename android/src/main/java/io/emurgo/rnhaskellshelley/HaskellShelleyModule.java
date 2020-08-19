@@ -32,6 +32,13 @@ public class HaskellShelleyModule extends ReactContextBaseJavaModule {
                 .map(RPtr::toJs)
                 .pour(promise);
     }
+    @ReactMethod
+    public final void makeDaedalusBootstrapWitness(String txBodyHash, String addr, String key, Promise promise) {
+        Native.I
+                .makeDaedalusBootstrapWitness(new RPtr(txBodyHash), new RPtr(addr), new RPtr(key))
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
 
     @ReactMethod
     public final void makeVkeyWitness(String txBodyHash, String sk, Promise promise) {
@@ -194,6 +201,13 @@ public final void bip32PrivateKeyFromBip39Entropy(String entropy, String passwor
                 .map(RPtr::toJs)
                 .pour(promise);
     }
+    @ReactMethod
+    public final void byronAddressFromIcarusKey(String bip32PublicKey, Integer network, Promise promise) {
+        Native.I
+                .byronAddressFromIcarusKey(new RPtr(bip32PublicKey), network)
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
 
     // Address
 
@@ -338,6 +352,15 @@ public final void bip32PrivateKeyFromBip39Entropy(String entropy, String passwor
                 .map(RPtr::toJs)
                 .pour(promise);
     }
+    @ReactMethod
+    public final void baseAddressToAddress(String address, Promise promise) {
+        Native.I
+                .baseAddressToAddress(new RPtr(address))
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
+
+    
 
     // UnitInterval
 
@@ -684,5 +707,30 @@ public final void bip32PrivateKeyFromBip39Entropy(String entropy, String passwor
                 .map(RPtr::toJs)
                 .pour(promise);
     }
+    //Bip32PublicKey
+    @ReactMethod
+    public final void bip32PublicKeyToRawKey(String bip32PublicKey, Promise promise) {
+        Native.I
+                .bip32PublicKeyToRawKey(new RPtr(bip32PublicKey))
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
+    //PublicKey
+    @ReactMethod
+    public final void publicKeyHash(String publicKey, Promise promise) {
+        Native.I
+                .publicKeyHash(new RPtr(publicKey))
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
+    //
+    @ReactMethod
+    public final void legacyDaedalusPrivateKeyFromBytes(String bytes, Promise promise) {
+        Native.I
+                .legacyDaedalusPrivateKeyFromBytes(Base64.decode(bytes, Base64.DEFAULT))
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
+
 
 }
