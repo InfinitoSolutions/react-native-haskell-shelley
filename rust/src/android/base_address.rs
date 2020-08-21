@@ -62,3 +62,16 @@ pub unsafe extern "C" fn Java_io_emurgo_rnhaskellshelley_Native_baseAddressFromA
   })
   .jresult(&env)
 }
+
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn Java_io_emurgo_rnhaskellshelley_Native_baseAddressToAddress(
+  env: JNIEnv, _: JObject, address: JRPtr
+) -> jobject {
+  handle_exception_result(|| {
+    let address = address.rptr(&env)?;
+    address.typed_ref::<BaseAddress>().and_then(|base_address| base_address.to_address().rptr().jptr(&env))
+  })
+  .jresult(&env)
+}

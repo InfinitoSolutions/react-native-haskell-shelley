@@ -19,6 +19,8 @@ final class Native {
     public final native Result<RPtr> makeIcarusBootstrapWitness(RPtr txBodyHash, RPtr addr, RPtr key);
     public final native Result<RPtr> makeVkeyWitness(RPtr txBodyHash, RPtr sk);
     public final native Result<RPtr> hashTransaction(RPtr txBody);
+    public final native Result<RPtr> makeDaedalusBootstrapWitness(RPtr txBodyHash, RPtr addr, RPtr key);
+
 
     // BigNum
     public final native Result<RPtr> bigNumFromStr(String str);
@@ -43,6 +45,7 @@ final class Native {
     public final native Result<Boolean> byronAddressIsValid(String str);
     public final native Result<RPtr> byronAddressFromAddress(RPtr address);
     public final native Result<RPtr> byronAddressToAddress(RPtr byronAddress);
+    public final native Result<RPtr> byronAddressFromIcarusKey(RPtr bip32PrivateKey, int network);
 
     // Address
     public final native Result<byte[]> addressToBytes(RPtr address);
@@ -70,6 +73,8 @@ final class Native {
     public final native Result<RPtr> baseAddressPaymentCred(RPtr baseAddress);
     public final native Result<RPtr> baseAddressStakeCred(RPtr baseAddress);
     public final native Result<RPtr> baseAddressFromAddress(RPtr address);
+    public final native Result<RPtr> baseAddressToAddress(RPtr address);
+    
 
     // UnitInterval
     public final native Result<byte[]> unitIntervalToBytes(RPtr unitInterval);
@@ -134,4 +139,13 @@ final class Native {
     public final native Result<RPtr> transactionBuilderEstimateFee(RPtr txBuilder);
 
     public final native void ptrFree(RPtr ptr);
+
+    // Bip32PublicKey
+    public final native Result<RPtr> bip32PublicKeyToRawKey(RPtr bip32PublicKey);
+    // PublicKey
+    public final native Result<RPtr> publicKeyHash(RPtr publicKey);
+    //
+    public final native Result<RPtr> legacyDaedalusPrivateKeyFromBytes(byte[] bytes);
+
+    
 }
