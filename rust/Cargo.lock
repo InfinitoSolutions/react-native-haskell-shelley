@@ -99,6 +99,15 @@ version = "1.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "cardano"
+version = "0.1.1"
+dependencies = [
+ "cbor_event 2.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "chain-core 0.1.0",
+ "cryptoxide 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "cardano-legacy-address"
 version = "0.1.1"
 source = "git+https://github.com/Emurgo/cardano-serialization-lib.git#901ab6ed23257e35dbd03ad15b75d244452baec0"
@@ -180,6 +189,13 @@ dependencies = [
 name = "chain-core"
 version = "0.1.0"
 source = "git+https://github.com/Emurgo/cardano-serialization-lib.git#901ab6ed23257e35dbd03ad15b75d244452baec0"
+dependencies = [
+ "cfg-if 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "chain-core"
+version = "0.1.0"
 dependencies = [
  "cfg-if 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -612,6 +628,7 @@ dependencies = [
 name = "react-native-haskell-shelley"
 version = "0.0.1"
 dependencies = [
+ "cardano 0.1.1",
  "cardano-serialization-lib 1.0.2 (git+https://github.com/Emurgo/cardano-serialization-lib.git)",
  "cbindgen 0.14.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "jni 0.13.1 (registry+https://github.com/rust-lang/crates.io-index)",

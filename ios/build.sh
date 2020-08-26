@@ -18,7 +18,7 @@ OUTPUT_DIR=`echo "${CONFIGURATION}" | tr '[:upper:]' '[:lower:]'`
 
 cd "${ROOT_DIR}"
 
-# cargo lipo --xcode-integ
+cargo lipo --xcode-integ
 
 mkdir -p "${CONFIGURATION_BUILD_DIR}"
 

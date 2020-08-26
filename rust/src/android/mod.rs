@@ -24,6 +24,8 @@ mod vkeywitnesses;
 mod bip32_public_key;
 mod public_key;
 mod legacy_daedalus_private_key;
+mod ibl;
+
 // declare other modules here
 // mod transaction;
 

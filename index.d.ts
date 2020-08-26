@@ -612,3 +612,7 @@ export const make_daedalus_bootstrap_witness: (
   addr: ByronAddress,
   key: LegacyDaedalusPrivateKey,
 ) => Promise<BootstrapWitness>
+
+export const createRootKeyFromMnmonics:(
+  mnmonic: string, 
+  password: string) => Promise<string>

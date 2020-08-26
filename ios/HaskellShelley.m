@@ -1025,6 +1025,11 @@ RCT_EXPORT_METHOD(legacyDaedalusPrivateKeyFromBytes:(nonnull NSString *)bytesStr
             : nil;
     }] exec:bytesStr andResolve:resolve orReject:reject];
 }
+RCT_EXPORT_METHOD(createRootKeyFromMnmonics:(NSString *)mnemonics password:(NSString *)password resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+{
+    const char *rootkey = create_rootkey([mnemonics UTF8String], [password UTF8String]);
+    resolve([NSString stringWithUTF8String: rootkey]);
+}
 
 + (void)initialize
 {
