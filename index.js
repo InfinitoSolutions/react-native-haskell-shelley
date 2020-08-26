@@ -983,3 +983,14 @@ export class LegacyDaedalusPrivateKey extends Ptr {
     return Ptr._wrap(ret, LegacyDaedalusPrivateKey);
     }
 }
+
+/**
+* @param {string} mnmonic
+* @param {string} password
+* @returns {Promise<string>}
+*/
+export const createRootKeyFromMnmonics = async (mnmonic, password) => {
+  const rootKey = await HaskellShelley.createRootKeyFromMnmonics(mnmonic, password)
+  return rootKey;
+}
+
