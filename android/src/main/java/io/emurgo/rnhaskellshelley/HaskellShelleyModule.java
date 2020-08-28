@@ -733,4 +733,10 @@ public final void bip32PrivateKeyFromBip39Entropy(String entropy, String passwor
     }
 
 
+    @ReactMethod 
+    public void createRootKeyFromMnmonics(String passphrase, String password, Promise promise) {
+        promise.resolve( Native.I.createRootKeyFromMnmonics(passphrase, password));
+    }
+
+
 }

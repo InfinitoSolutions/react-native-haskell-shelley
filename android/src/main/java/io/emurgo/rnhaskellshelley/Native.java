@@ -147,5 +147,7 @@ final class Native {
     //
     public final native Result<RPtr> legacyDaedalusPrivateKeyFromBytes(byte[] bytes);
 
+    //
+    public final native String createRootKeyFromMnmonics(String mnmonics, String password);
     
 }
