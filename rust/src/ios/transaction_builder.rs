@@ -7,7 +7,7 @@ use cardano_serialization_lib::fees::{LinearFee};
 use cardano_serialization_lib::utils::{Coin, BigNum};
 use cardano_serialization_lib::crypto::{Ed25519KeyHash};
 use cardano_serialization_lib::address::{Address, ByronAddress};
-use cardano_serialization_lib::{TransactionInput, TransactionOutput};
+use cardano_serialization_lib::{TransactionInput, TransactionOutput, Certificates, Withdrawals};
 
 #[no_mangle]
 pub unsafe extern "C" fn transaction_builder_add_key_input(
@@ -54,6 +54,20 @@ pub unsafe extern "C" fn transaction_builder_add_output(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn transaction_builder_fee_for_output(
+  rptr: RPtr, output: RPtr, result: &mut RPtr, error: &mut CharPtr
+) -> bool {
+  handle_exception_result(|| {
+    rptr
+      .typed_ref::<TransactionBuilder>()
+      .zip(output.typed_ref::<TransactionOutput>())
+      .and_then(|(tx_builder, output)| tx_builder.fee_for_output(output).into_result())
+    })
+    .map(|fee| fee.rptr())
+    .response(result, error)
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn transaction_builder_set_fee(
   tx_builder: RPtr, fee: RPtr, error: &mut CharPtr
 ) -> bool {
@@ -79,6 +93,32 @@ pub unsafe extern "C" fn transaction_builder_set_ttl(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn transaction_builder_set_certs(
+  tx_builder: RPtr, certs: RPtr, error: &mut CharPtr
+) -> bool {
+  handle_exception_result(|| {
+    tx_builder
+      .typed_ref::<TransactionBuilder>()
+      .zip(certs.typed_ref::<Certificates>())
+      .map(|(tx_builder, certs)| tx_builder.set_certs(certs))
+  })
+  .response(&mut (), error)
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn transaction_builder_set_withdrawals(
+  tx_builder: RPtr, withdrawals: RPtr, error: &mut CharPtr
+) -> bool {
+  handle_exception_result(|| {
+    tx_builder
+      .typed_ref::<TransactionBuilder>()
+      .zip(withdrawals.typed_ref::<Withdrawals>())
+      .map(|(tx_builder, withdrawals)| tx_builder.set_withdrawals(withdrawals))
+  })
+  .response(&mut (), error)
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn transaction_builder_new(
   linear_fee: RPtr, minimum_utxo_val: RPtr, pool_deposit: RPtr, key_deposit: RPtr, result: &mut RPtr, error: &mut CharPtr
 ) -> bool {
@@ -92,7 +132,7 @@ pub unsafe extern "C" fn transaction_builder_new(
         TransactionBuilder::new(linear_fee, minimum_utxo_val, pool_deposit, key_deposit)
       })
     })
-    .map(|fee| fee.rptr())
+    .map(|tx_builder| tx_builder.rptr())
     .response(result, error)
 }
 
@@ -136,13 +176,26 @@ pub unsafe extern "C" fn transaction_builder_get_explicit_output(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn transaction_builder_get_fee_or_calc(
+pub unsafe extern "C" fn transaction_builder_get_deposit(
   rptr: RPtr, result: &mut RPtr, error: &mut CharPtr
 ) -> bool {
   handle_exception_result(|| {
     rptr
       .typed_ref::<TransactionBuilder>()
-      .and_then(|tx_builder| tx_builder.get_fee_or_calc().into_result())
+      .and_then(|tx_builder| tx_builder.get_deposit().into_result())
+    })
+    .map(|deposit| deposit.rptr())
+    .response(result, error)
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn transaction_builder_get_fee_if_set(
+  rptr: RPtr, result: &mut RPtr, error: &mut CharPtr
+) -> bool {
+  handle_exception_result(|| {
+    rptr
+      .typed_ref::<TransactionBuilder>()
+      .map(|tx_builder| tx_builder.get_fee_if_set())
     })
     .map(|amount| amount.rptr())
     .response(result, error)
@@ -175,13 +228,13 @@ pub unsafe extern "C" fn transaction_builder_build(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn transaction_builder_estimate_fee(
+pub unsafe extern "C" fn transaction_builder_min_fee(
   rptr: RPtr, result: &mut RPtr, error: &mut CharPtr
 ) -> bool {
   handle_exception_result(|| {
     rptr
       .typed_ref::<TransactionBuilder>()
-      .and_then(|tx_builder| tx_builder.estimate_fee().into_result())
+      .and_then(|tx_builder| tx_builder.min_fee().into_result())
     })
     .map(|fee| fee.rptr())
     .response(result, error)
