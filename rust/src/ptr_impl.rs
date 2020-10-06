@@ -44,3 +44,5 @@ impl RPtrRepresentable for Vkey {}
 impl RPtrRepresentable for Vkeywitness {}
 impl RPtrRepresentable for Vkeywitnesses {}
 impl RPtrRepresentable for Withdrawals {}
+impl RPtrRepresentable for LegacyDaedalusPrivateKey {}
+

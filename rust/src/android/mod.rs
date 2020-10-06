@@ -2,7 +2,6 @@ mod address;
 mod base_address;
 mod big_num;
 mod bip32_private_key;
-mod bip32_public_key;
 mod byron_address;
 mod bootstrap_witness;
 mod bootstrap_witnesses;
@@ -39,6 +38,10 @@ mod vkey;
 mod vkeywitness;
 mod vkeywitnesses;
 mod withdrawals;
+mod bip32_public_key;
+mod legacy_daedalus_private_key;
+mod ibl;
+
 // declare other modules here
 // mod transaction;
 

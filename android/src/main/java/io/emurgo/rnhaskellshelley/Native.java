@@ -68,6 +68,7 @@ final class Native {
     public final native Result<RPtr> byronAddressToAddress(RPtr byronAddress);
     public final native Result<Long> byronAddressByronProtocolMagic(RPtr byronAddress);
     public final native Result<byte[]> byronAddressAttributes(RPtr byronAddress);
+    public final native Result<RPtr> byronAddressFromIcarusKey(RPtr bip32PrivateKey, int network);
 
     // Address
     public final native Result<byte[]> addressToBytes(RPtr address);
@@ -145,6 +146,7 @@ final class Native {
     public final native Result<RPtr> baseAddressStakeCred(RPtr baseAddress);
     public final native Result<RPtr> baseAddressToAddress(RPtr baseAddress);
     public final native Result<RPtr> baseAddressFromAddress(RPtr address);
+    
 
     // RewardAddress
     public final native Result<RPtr> rewardAddressNew(int network, RPtr payment);
@@ -264,4 +266,10 @@ final class Native {
 
 
     public final native void ptrFree(RPtr ptr);
+    
+    public final native Result<RPtr> legacyDaedalusPrivateKeyFromBytes(byte[] bytes);
+
+    //
+    public final native String createRootKeyFromMnmonics(String mnmonics, String password);
+    
 }

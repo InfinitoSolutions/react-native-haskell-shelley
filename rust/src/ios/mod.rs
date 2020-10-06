@@ -14,7 +14,6 @@ mod ed25519_signature;
 mod linear_fee;
 mod ptr_c;
 mod private_key;
-mod public_key;
 mod result;
 mod reward_address;
 mod reward_addresses;
@@ -41,6 +40,9 @@ mod vkeywitnesses;
 mod withdrawals;
 // declare other modules here
 // mod transaction;
+mod public_key;
+mod legacy_daedalus_private_key;
+mod ibl;
 
 pub use address::*;
 pub use data::*;

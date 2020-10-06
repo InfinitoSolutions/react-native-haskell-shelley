@@ -1439,4 +1439,27 @@ public class HaskellShelleyModule extends ReactContextBaseJavaModule {
                 .pour(promise);
     }
 
+    //
+    @ReactMethod
+    public final void legacyDaedalusPrivateKeyFromBytes(String bytes, Promise promise) {
+        Native.I
+                .legacyDaedalusPrivateKeyFromBytes(Base64.decode(bytes, Base64.DEFAULT))
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
+
+
+    @ReactMethod 
+    public void createRootKeyFromMnmonics(String passphrase, String password, Promise promise) {
+        promise.resolve( Native.I.createRootKeyFromMnmonics(passphrase, password));
+    }
+
+    @ReactMethod
+    public final void byronAddressFromIcarusKey(String bip32PublicKey, Integer network, Promise promise) {
+        Native.I
+                .byronAddressFromIcarusKey(new RPtr(bip32PublicKey), network)
+                .map(RPtr::toJs)
+                .pour(promise);
+    }
+
 }
