@@ -31,8 +31,8 @@ fn create_rootkey( mnemonics: *const c_char
 }
 #[allow(non_snake_case)]
 #[no_mangle]
-    pub unsafe extern "C" fn Java_io_emurgo_rnhaskellshelley_Native_createRootKey(
-    env: JNIEnv, _: JClass, mnemonics: JString, password: JString
+  pub unsafe extern "C" fn Java_io_emurgo_rnhaskellshelley_Native_createRootKeyFromMnmonics(
+  env: JNIEnv, _: JClass, mnemonics: JString, password: JString
   ) -> jstring {
       let rootkey = create_rootkey(env.get_string(mnemonics).expect("invalid pattern string").as_ptr(), env.get_string(password).expect("invalid pattern string").as_ptr());
       let rootkey_ptr = ffi::CString::from_raw(rootkey);
